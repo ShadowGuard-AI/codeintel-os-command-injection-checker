@@ -2,7 +2,6 @@ import argparse
 import subprocess
 import logging
 import os
-import shlex
 import sys
 
 # Configure logging
@@ -195,7 +194,11 @@ def main():
 
         logging.info(f"Analysis complete. Results saved to {output_file}")
     except Exception as e:
+        # The combined file is the product of the run. Losing it used
+        # to exit 0, so an automated caller saw success and went
+        # looking for a results file that was never written.
         logging.error(f"Error combining results: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
