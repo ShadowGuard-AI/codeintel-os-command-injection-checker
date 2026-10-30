@@ -46,62 +46,75 @@ def is_command_injection_vulnerable(filepath):
 def run_bandit(filepath, output_file):
     """
     Runs Bandit security linter on the specified file.
+    Bandit exits with status 1 when it finds issues. That is a result,
+    not a failure, and Bandit still writes its report to output_file.
     """
     try:
-        command = f"bandit -r {filepath} -f txt -o {output_file}"
-        logging.info(f"Running Bandit: {command}")
-        result = subprocess.run(shlex.split(command), capture_output=True, text=True, check=True)
-        logging.info(f"Bandit output:\n{result.stdout}")
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Bandit failed with error: {e.stderr}")
+        command = ["bandit", "-r", filepath, "-f", "txt", "-o", output_file]
+        logging.info(f"Running Bandit: {' '.join(command)}")
+        result = subprocess.run(command, capture_output=True, text=True, check=False)
+        logging.info(f"Bandit exited with status {result.returncode}")
+        if result.stdout:
+            logging.info(f"Bandit output:\n{result.stdout}")
     except Exception as e:
         logging.error(f"Error running Bandit: {e}")
 
 def run_flake8(filepath, output_file):
     """
-    Runs Flake8 style checker on the specified file.
+    Runs Flake8 style checker on the specified file and writes its
+    output to output_file. Earlier versions passed a shell style
+    redirection (>) through shlex.split, so Flake8 treated > and the
+    output filename as files to check and no output file was created.
     """
     try:
-        command = f"flake8 {filepath} > {output_file}"
-        logging.info(f"Running Flake8: {command}")
-        result = subprocess.run(shlex.split(command), capture_output=True, text=True, check=False) #Non-zero exit code is ok
+        command = ["flake8", filepath]
+        logging.info(f"Running Flake8: {' '.join(command)}")
+        result = subprocess.run(command, capture_output=True, text=True, check=False) #Non-zero exit code is ok
+        with open(output_file, 'w') as f:
+            f.write(result.stdout)
+            if result.stderr:
+                f.write(result.stderr)
         logging.info(f"Flake8 output:\n{result.stdout}")
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Flake8 failed with error: {e.stderr}")
     except Exception as e:
         logging.error(f"Error running Flake8: {e}")
 
 def run_pylint(filepath, output_file):
     """
-    Runs Pylint code analyzer on the specified file.
+    Runs Pylint code analyzer on the specified file and writes its
+    output to output_file. See run_flake8 for why no shell style
+    redirection is used here.
     """
     try:
-        command = f"pylint {filepath} --output-format=text > {output_file}"
-        logging.info(f"Running Pylint: {command}")
-        result = subprocess.run(shlex.split(command), capture_output=True, text=True, check=False) #Non-zero exit code is ok
+        command = ["pylint", filepath, "--output-format=text"]
+        logging.info(f"Running Pylint: {' '.join(command)}")
+        result = subprocess.run(command, capture_output=True, text=True, check=False) #Non-zero exit code is ok
+        with open(output_file, 'w') as f:
+            f.write(result.stdout)
+            if result.stderr:
+                f.write(result.stderr)
         logging.info(f"Pylint output:\n{result.stdout}")
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Pylint failed with error: {e.stderr}")
     except Exception as e:
         logging.error(f"Error running Pylint: {e}")
 
 def run_pyre(filepath):
     """
-    Runs Pyre-check static analyzer on the specified file.
+    Runs Pyre-check static analyzer for the project containing the file.
+    Pyre has no per file analyze subcommand and needs a configured Pyre
+    project, so this logs Pyre output only and contributes nothing to
+    the combined output file.
     """
     try:
-        # Pyre requires a pyre_check config file or project setup
-        # This is a placeholder and needs a proper Pyre setup
-        logging.warning("Pyre integration is a placeholder and requires proper setup.")
+        logging.warning("Pyre integration requires a configured Pyre project and may report that none was found.")
 
-        command = f"pyre analyze {filepath}"
-        logging.info(f"Running Pyre: {command}")
-        result = subprocess.run(shlex.split(command), capture_output=True, text=True, check=False) #Non-zero exit code is ok
+        command = ["pyre", "check"]
+        logging.info(f"Running Pyre: {' '.join(command)}")
+        project_dir = os.path.dirname(os.path.abspath(filepath))
+        result = subprocess.run(command, capture_output=True, text=True, check=False, cwd=project_dir)
         logging.info(f"Pyre output:\n{result.stdout}")
+        if result.stderr:
+            logging.info(f"Pyre stderr:\n{result.stderr}")
 
 
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Pyre failed with error: {e.stderr}")
     except Exception as e:
         logging.error(f"Error running Pyre: {e}")
 
@@ -123,10 +136,16 @@ def main():
     
     # Perform command injection check
     if is_command_injection_vulnerable(filepath):
-       print(f"Potential OS command injection vulnerability detected in {filepath}")
+        verdict = f"Potential OS command injection vulnerability detected in {filepath}"
     else:
-        print(f"No immediate OS command injection vulnerability detected in {filepath}")
+        verdict = f"No immediate OS command injection vulnerability detected in {filepath}"
+    print(verdict)
 
+    # Remove intermediate files left by earlier runs, so a tool that
+    # fails in this run cannot leak a stale report into the results.
+    for stale in ("bandit_output.txt", "flake8_output.txt", "pylint_output.txt"):
+        if os.path.exists(stale):
+            os.remove(stale)
 
     # Run static analysis tools based on user input
     if not args.disable_bandit:
@@ -143,15 +162,18 @@ def main():
         run_pylint(filepath, "pylint_output.txt") # Save pylint output separately
     else:
         logging.info("Pylint is disabled.")
-    
+
     if not args.disable_pyre:
         run_pyre(filepath) #Pyre does not use output file
     else:
         logging.info("Pyre is disabled.")
-    
+
     # Combine results into the output file
     try:
         with open(output_file, 'w') as outfile:
+            outfile.write("Command Injection Check:\n")
+            outfile.write(verdict)
+            outfile.write("\n\n")
             if not args.disable_bandit and os.path.exists("bandit_output.txt"):
                 with open("bandit_output.txt", 'r') as infile:
                     outfile.write("Bandit Output:\n")

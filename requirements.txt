@@ -1,1 +1,5 @@
-`shlex` is part of Python's standard library and doesn't require external installation. Therefore, it should not be included in a `requirements.txt` file or similar dependency specification.
+# main.py uses only the Python standard library (argparse, subprocess,
+# logging, os, shlex and sys), so there are no packages to install for it.
+# Bandit, Flake8, Pylint and Pyre are separate external tools that main.py
+# invokes by name. Install any of them you want it to run, for example:
+# pip install bandit flake8 pylint pyre-check
