@@ -1,3 +1,5 @@
+![Banner](banner.png)
+
 # OS Command Injection Checker
 
 Checks a single Python file for a potential OS command injection pattern, then optionally runs external analysis tools on the same file and combines their output into one results file.
