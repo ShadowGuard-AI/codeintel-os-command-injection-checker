@@ -134,7 +134,8 @@ def main():
         sys.exit(1)
     
     # Perform command injection check
-    if is_command_injection_vulnerable(filepath):
+    vulnerable = is_command_injection_vulnerable(filepath)
+    if vulnerable:
         verdict = f"Potential OS command injection vulnerability detected in {filepath}"
     else:
         verdict = f"No immediate OS command injection vulnerability detected in {filepath}"
@@ -198,6 +199,12 @@ def main():
         # to exit 0, so an automated caller saw success and went
         # looking for a results file that was never written.
         logging.error(f"Error combining results: {e}")
+        sys.exit(1)
+
+    # The built in verdict changes the exit status: a potential
+    # vulnerability exits 1. A clean verdict exits 0 even when an
+    # external tool was missing, as the README states for tools.
+    if vulnerable:
         sys.exit(1)
 
 

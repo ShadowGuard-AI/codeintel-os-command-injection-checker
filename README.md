@@ -49,7 +49,7 @@ Verified output on a sample file that passes `input()` to `os.system`: the progr
 
 - The combined output file contains the command injection verdict first, then whichever of `bandit_output.txt`, `flake8_output.txt` and `pylint_output.txt` were produced in the current directory during this run. Intermediate files from earlier runs are deleted at the start of each run so stale reports cannot leak into new results.
 - Pyre output is logged only and is not written into the combined file. Pyre needs a configured Pyre project for the directory containing the target file; without one it reports that in the log.
-- A tool that is not installed logs an error such as `Error running Bandit: [Errno 2] No such file or directory: 'bandit'` and the run continues, exiting with status 0. Bandit, Flake8 and Pylint findings do not change the exit status.
+- A tool that is not installed logs an error such as `Error running Bandit: [Errno 2] No such file or directory: 'bandit'` and the run continues. A missing tool by itself does not change the exit status: a clean built in verdict still exits with status 0. Bandit, Flake8 and Pylint findings do not change the exit status. The built in verdict does: a potential OS command injection vulnerability exits with status 1.
 - The built in check only recognises the call and input spellings listed above. Calls such as `os.popen(`, `subprocess.getoutput(` or `eval(` are not detected by it, although Bandit may report some of them.
 
 ## License
