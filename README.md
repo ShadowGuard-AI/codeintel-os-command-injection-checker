@@ -55,3 +55,9 @@ Verified output on a sample file that passes `input()` to `os.system`: the progr
 ## License
 
 Copyright (c) ShadowStrikeHQ. No separate LICENSE file is included in this repository.
+
+## Diagrams and maps
+
+I drew the system out in [codeintel-os-command-injection-checker-Visuals](codeintel-os-command-injection-checker-Visuals/): an architecture diagram, a components diagram of the seven functions, a flowchart of one run, and a product map, with the written product map, statistics with citations, and the roadmap in [VISUAL.md](codeintel-os-command-injection-checker-Visuals/VISUAL.md). Every sheet also ships as a PNG photograph of the paper page beside its SVG.
+
+![OS Command Injection Checker architecture](codeintel-os-command-injection-checker-Visuals/architecture.svg)
