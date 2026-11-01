@@ -29,6 +29,9 @@ def is_command_injection_vulnerable(filepath):
         with open(filepath, 'r') as f:
             code = f.read()
         
+        # I look for both halves as plain text in the same file: a
+        # command call and an input source. Split them across two
+        # modules and this check sees neither half as a pair.
         if "os.system(" in code or "subprocess.call(" in code or "subprocess.Popen(" in code or "subprocess.run(" in code:
             if "input(" in code or "sys.argv[" in code or "os.environ[" in code:  # Check for user-supplied input
                 logging.warning(f"Potential OS command injection vulnerability detected in {filepath}")
@@ -149,6 +152,9 @@ def main():
 
     # Run static analysis tools based on user input
     if not args.disable_bandit:
+        # I use fixed intermediate names in the working directory, so
+        # two runs at once in the same directory write over each
+        # other's bandit, flake8, and pylint files while they go.
         run_bandit(filepath, "bandit_output.txt")  # Save bandit output separately
     else:
         logging.info("Bandit is disabled.")
@@ -170,6 +176,9 @@ def main():
 
     # Combine results into the output file
     try:
+        # The default output name is output.txt in the caller's
+        # directory, not next to the file I scanned. Running this from
+        # a home directory leaves the report there.
         with open(output_file, 'w') as outfile:
             outfile.write("Command Injection Check:\n")
             outfile.write(verdict)
