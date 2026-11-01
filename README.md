@@ -14,7 +14,7 @@ The built in check is a plain substring search. It reports a potential vulnerabi
 ## Install
 
 ```
-git clone https://github.com/ShadowGuardAI/codeintel-os-command-injection-checker.git
+git clone https://github.com/ShadowGuard-AI/codeintel-os-command-injection-checker.git
 cd codeintel-os-command-injection-checker
 ```
 
