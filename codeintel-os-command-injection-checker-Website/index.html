@@ -3,164 +3,121 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Codeintel Os Command Injection Checker: what it is, how it runs, where it stops</title>
-<meta name="description" content="Checks a single Python file for a potential OS command injection pattern, then optionally runs external analysis tools on the same file and combines t">
+<title>codeintel-os-command-injection-checker: the herbarium sheet</title>
 <style>
-:root {
-  --bg: #0e2a22; --panel: #14382d; --ink: #eef0e2;
-  --mut: #1b4b3c;
-  --acc: #f4d06f; --acc2: #ec8a7a;
-  --line: #14382d;
-}
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink);
-  font-family: 'Book Antiqua', Georgia, serif; line-height: 1.55; }
-code, pre, .mono { font-family: 'Andale Mono', monospace; }
-a { color: var(--acc2); }
-.hero { padding: 3rem 6vw 1rem; }
-.hero img.banner { width: 100%; height: auto; border: 1px solid var(--line);
-  border-radius: 10px; }
-.logo { width: 92px; height: 92px; border-radius: 18px;
-  border: 1px solid var(--line); }
-h1 { font-size: 2.4rem; margin: 0.4em 0 0.1em; }
-h2 { border-bottom: 2px solid var(--acc); padding-bottom: 0.2em;
-  margin-top: 2em; }
-.lede { font-size: 1.15rem; max-width: 62ch; }
-main { padding: 0 6vw 3rem; max-width: 1180px; margin: 0 auto; }
-.grid { display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
-.card { background: var(--panel); border: 1px solid var(--line);
-  border-radius: 12px; padding: 1rem 1.2rem; }
-.card.pop { animation: rise 0.7s ease both; }
-@keyframes rise { from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: none; } }
-pre.code { background: #101014; color: #e8e6df; padding: 1rem 1.2rem;
-  border-radius: 12px; overflow-x: auto; font-size: 0.86rem;
-  border-left: 5px solid var(--acc); }
-table { border-collapse: collapse; width: 100%; }
-td, th { border-bottom: 1px solid var(--line); padding: 0.45rem 0.6rem;
-  text-align: left; }
-.shots { display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-.shots img { width: 100%; height: auto; border: 1px solid var(--line);
-  border-radius: 10px; background: #f4f1e8; }
-footer { padding: 2rem 6vw; border-top: 1px solid var(--line);
-  color: var(--mut); }
-.rail { display: flex; gap: 1.2rem; align-items: flex-start; }
-.rail nav { position: sticky; top: 1rem; min-width: 180px; }
-@media (max-width: 760px) { .rail { flex-direction: column; }
-  .rail nav { position: static; } }
-@media (prefers-reduced-motion: reduce) {
-  .card.pop { animation: none; } * { scroll-behavior: auto; } }
+@font-face { font-family:'Disp'; src:url('fonts/Benne.ttf') format('truetype'); }
+@font-face { font-family:'Text'; src:url('fonts/Archivo.ttf') format('truetype'); }
+* { box-sizing:border-box; } body { margin:0; background:#8a7f5c; color:#3a352a; font-family:'Text',sans-serif; line-height:1.55; }
+header img.hero { width:100%; display:block; } header .bar { display:flex; gap:18px; align-items:center; padding:18px 24px; }
+header .bar img { width:84px; } h1,h2,h3 { font-family:'Disp',serif; font-weight:normal; }
+nav { padding:0 24px 14px; } nav a { color:#3a352a; margin-right:16px; }
+main { max-width:980px; margin:0 auto; padding:10px 20px 40px; }
+section { background:#e8e0c8; border-radius:10px; padding:20px 24px; margin:18px 0; }
+code,pre { font-family:ui-monospace,monospace; } pre { white-space:pre-wrap; overflow-wrap:anywhere; }
+.btn { display:inline-block; font-family:'Disp',serif; padding:10px 18px; margin:4px; border-radius:46% 54% 52% 48%/58% 60% 40% 42%; border:2px solid #7d94b8; color:#3a352a; background:transparent; text-decoration:none; }
+.callout { border-left:5px solid #7d94b8; padding:10px 14px; margin:12px 0; background:rgba(0,0,0,0.08); }
+table { border-collapse:collapse; } td,th { border:1px solid #7d94b8; padding:6px 10px; text-align:left; }
+footer { padding:22px; text-align:center; }
 </style>
 </head>
-<body class="layout-grid">
-<!-- This page exists for codeintel-os-command-injection-checker alone: the layout (console-grid),
-     the colors, and the type were picked for this project, not
-     shared with the other project pages. The code block below is
-     copied from the file it names, line for line. If it looks
-     plain, that is because the project is plain, and I would
-     rather the page match the project than dress it up. The one
-     thing I will not do here is oversell: what this project does
-     not do is stated on the page, not hidden from it. -->
-<header class="hero">
-  <img class="logo" src="assets/logo.png" alt="Codeintel Os Command Injection Checker logo">
-  <img class="banner" src="assets/banner.png" alt="">
-  <h1>Codeintel Os Command Injection Checker</h1>
-  <p class="mono"><a href="https://github.com/ShadowGuard-AI/codeintel-os-command-injection-checker">github.com/ShadowGuard-AI/codeintel-os-command-injection-checker</a></p>
+<body>
+<header>
+<img class="hero" src="assets/intro-banner.png" alt="Introduction banner">
+<div class="bar"><img src="assets/logo.png" alt="Logo"><h1>codeintel-os-command-injection-checker: the herbarium sheet</h1></div>
+<nav><a href="#s0">The check</a><a href="#s1">Requirements</a><a href="#s2">Keeping</a><a href="#s3">Usage</a><a href="#s4">Labels</a><a href="#s5">Example</a><a href="#s6">Output</a><a href="#s7">Exit and licence</a></nav>
 </header>
-
 <main>
-  <section class="rail">
-    <nav aria-label="on this page">
-      <p class="mono"><a href="#run">Run it</a><br>
-      <a href="#files">The files</a><br>
-      <a href="#sheets">The sheets</a><br>
-      <a href="https://github.com/ShadowGuard-AI/codeintel-os-command-injection-checker">The repo</a></p>
-    </nav>
-    <div>
-      <p class="lede">Checks a single Python file for a potential OS command injection pattern, then optionally runs external analysis tools on the same file and combines their output into one results file.</p>
-      <div class="grid">
-        <div class="card pop"><h3>What it is</h3>
-          <p>Codeintel Os Command Injection Checker: 5 files, 273 counted
-          lines across Python 211, Markdown 57, Text 5. One job, done in the
-          open, in files you can read.</p></div>
-        <div class="card pop"><h3>The biggest piece</h3>
-          <p><code>main.py</code> carries the most
-          lines. If the project grows, that file is where the growth
-          lands first, for better or worse.</p></div>
-        <div class="card pop"><h3>The honest gap</h3>
-          <p>No test files yet. That is the honest gap, and the roadmap in the visuals folder says what the first one should cover.</p></div>
-      </div>
-      <section id="run">
-        <h2>Run it</h2>
-        <p>The repo README has the exact commands for this one. The
-        shape is the shape for most of my projects: clone it, read the
-        top file first so you know what will happen, then run it on
-        something you do not mind breaking.</p>
-        <p class="mono">$ git clone https://github.com/ShadowGuard-AI/codeintel-os-command-injection-checker.git<br>$ cd codeintel-os-command-injection-checker</p>
-      </section>
-      
-  <section aria-label="real code">
-    <h2>The code, as it sits in the repo</h2>
-    <p>From <code>main.py</code>, line 119 on. I did
-    not tidy it for the page. What you see is what the file has.</p>
-    <pre class="code"><code>
+<section id="s0"><h2>A Substring Search, Not a Flow Trace</h2><p>The checker examines a single Python file for a potential OS command injection pattern, and then, if they are allowed to run, it runs external analysis tools upon the same file and combines their output into one results file.</p>
+<p>The built in check is a plain substring search, which reports a potential vulnerability when the file contains one of <code>os.system(</code>, <code>subprocess.call(</code>, <code>subprocess.Popen(</code>, or <code>subprocess.run(</code>, and also contains one of <code>input(</code>, <code>sys.argv[</code>, or <code>os.environ[</code> anywhere in the same file.</p>
+<p>It does no data flow analysis, so it can miss real vulnerabilities, and it can flag code where the input never reaches the command.</p>
+<p style="color:#9c4a2d">Calls such as <code>os.popen(</code>, <code>subprocess.getoutput(</code>, or <code>eval(</code> are not recognised by the built in check at all, although Bandit may report some of them.</p><p><a class="btn" href="#s3">Run the Substring Check</a><a class="btn" href="#s3">Write the Combined Results File</a><a class="btn" href="#s3">Do Not Run Bandit</a><a class="btn" href="#s3">Do Not Run Flake8</a><a class="btn" href="#s3">Do Not Run Pylint</a><a class="btn" href="#s3">Do Not Run Pyre</a><a class="btn" href="#s3">Show Help</a></p></section>
+<section id="s1"><h2>Requirements, as a label follows a sheet</h2><p>Python 3 is required, and main.py uses only the standard library, so the requirements step, <code>pip install -r requirements.txt</code>, succeeds and installs nothing. Bandit, Flake8, Pylint, and Pyre are optional external tools, installed separately, for example <code>pip install bandit flake8 pylint pyre-check</code>, and any of them may be skipped by its own disable flag.</p></section>
+<section id="s2"><h2>The keeping of the files</h2><pre>git clone https://github.com/ShadowGuard-AI/codeintel-os-command-injection-checker.git
+cd codeintel-os-command-injection-checker</pre><p>The clone line stands correctly, and the README supplies the change of directory step.</p></section>
+<section id="s3"><h2>Usage, as the code accepts it</h2><pre>python main.py &lt;filepath&gt; [-o OUTPUT] [--disable-bandit] [--disable-flake8] [--disable-pylint] [--disable-pyre]
+python main.py --help</pre><p>The README usage block and the argument parser agree in this repo. There is no --version flag.</p></section>
+<section id="s4"><h2>The Six Pinned Labels</h2><table><tr><th>Label</th><th>What it does</th></tr>
+<tr><td><code>filepath</code></td><td>Required positional argument giving the path to the Python file to analyse. A file that does not exist ends the run with status 1.</td></tr>
+<tr><td><code>--output</code>, <code>-o</code></td><td>The combined results file. Default <code>output.txt</code>.</td></tr>
+<tr><td><code>--disable-bandit</code></td><td>Prevents Bandit from running.</td></tr>
+<tr><td><code>--disable-flake8</code></td><td>Prevents Flake8 from running.</td></tr>
+<tr><td><code>--disable-pylint</code></td><td>Prevents Pylint from running.</td></tr>
+<tr><td><code>--disable-pyre</code></td><td>Prevents Pyre from running.</td></tr></table>
+<p>A run with all four disable flags set is a run of the built in check alone, exactly as the fourth printed example in the README performs it:</p>
+<pre>python main.py my_script.py
+python main.py my_script.py --disable-bandit
+python main.py my_script.py -o results.txt
+python main.py my_script.py --disable-bandit --disable-flake8 --disable-pylint --disable-pyre</pre></section>
+<section id="s5"><h2>The mounted observation</h2><p>Upon a sample file that passes <code>input()</code> to <code>os.system</code>, the programme prints the sentence <code>Potential OS command injection vulnerability detected in bad.py</code>, and the results file begins with that verdict under a <code>Command Injection Check:</code> heading, followed by Bandit, Flake8, and Pylint sections. A file with no matching pattern prints the contrary sentence, beginning <code>No immediate OS command injection vulnerability detected in</code>, and naming the file examined.</p></section>
+<section id="s6"><h2>What the Combined File Holds</h2><p>The combined file carries the command injection verdict first, and after it whichever of <code>bandit_output.txt</code>, <code>flake8_output.txt</code>, and <code>pylint_output.txt</code> were produced in the current directory during this run. Intermediate files from earlier runs are deleted at the start of each run so that stale reports cannot leak into new results.</p>
+<p>Pyre output is logged only and is never written into the combined file. Pyre needs a configured Pyre project for the directory containing the target file, without which it reports that fact in the log.</p>
+<p>A tool that is not installed logs an error, of the kind the README quotes for Bandit, <code>Error running Bandit: [Errno 2] No such file or directory: 'bandit'</code>, and the run continues regardless.</p>
+<p>The README also records a set of diagrams and maps, drawn in a linked Visuals folder as an architecture diagram, a components diagram of the seven functions, a flowchart of one run, and a product map, with a written product map and a roadmap in its VISUAL.md. This page notes that folder's existence without restaging its contents.</p></section>
+<section id="s7"><h2>The Verdict Alone Sets the Exit Status</h2><p>A missing tool by itself does not change the exit status, and neither do the findings of Bandit, Flake8, or Pylint. The built in verdict alone governs the ending: a potential vulnerability exits with status 1, and a clean verdict exits with status 0.</p>
+<div class="callout"><h3>The Licence Label Disagrees with the Repository</h3><p>The README closes with the line <code>Copyright (c) ShadowStrikeHQ</code>, followed by the claim that no separate LICENSE file is included in this repository. Against that claim this page sets the repository fact, marked here in the rust reserved for faults: a LICENSE file is present, and it carries the MIT License. Both statements are shown. Neither is quietly corrected into the other.</p></div></section>
+<section id="verbatim"><h2>The README as printed</h2><pre>
+# OS Command Injection Checker
 
-def main():
-    &quot;&quot;&quot;
-    Main function to execute the code analysis.
-    &quot;&quot;&quot;
-    parser = setup_argparse()
-    args = parser.parse_args()
+Checks a single Python file for a potential OS command injection pattern, then optionally runs external analysis tools on the same file and combines their output into one results file.
 
-    filepath = args.filepath
-    output_file = args.output
+The built in check is a plain substring search. It reports a potential vulnerability when the file contains one of `os.system(`, `subprocess.call(`, `subprocess.Popen(` or `subprocess.run(` and also contains one of `input(`, `sys.argv[` or `os.environ[` anywhere in the file. It does no data flow analysis, so it can miss real vulnerabilities and can flag code where the input never reaches the command.
 
-    # Validate filepath
-    if not os.path.isfile(filepath):
-        logging.error(f&quot;Invalid filepath: {filepath}. File does not exist.&quot;)
-        sys.exit(1)
-    
-    # Perform command injection check
-    if is_command_injection_vulnerable(filepath):
-        verdict = f&quot;Potential OS command injection vulnerability detected in {filepath}&quot;
-    else:
-        verdict = f&quot;No immediate OS command injection vulnerability detected in {filepath}&quot;</code></pre>
-  </section>
-      <section id="files">
-        <h2>The files that matter</h2>
-        <table><tr><th>File</th><th>Lines</th></tr>
-        <tr><td><code>main.py</code></td><td>211</td></tr>
-        <tr><td><code>README.md</code></td><td>57</td></tr>
-        <tr><td><code>requirements.txt</code></td><td>5</td></tr>
-        <tr><td><code>banner.png</code></td><td>0</td></tr>
-        <tr><td><code>logo.png</code></td><td>0</td></tr>
-        </table>
-        <p>Names doing the work: <span class="mono">setup_argparse, is_command_injection_vulnerable, run_bandit, run_flake8, run_pylint, run_pyre, main</span>.</p>
-      </section>
-      <section id="sheets">
-        <h2>Drawn by hand</h2>
-        <p>I sketch my projects on notebook paper so I have to
-        understand them well enough to draw them. The full set,
-        with the counts and how they were counted, is the
-        <a href="https://github.com/ShadowGuard-AI/codeintel-os-command-injection-checker/tree/main/codeintel-os-command-injection-checker-Visuals">codeintel-os-command-injection-checker-Visuals</a>
-        folder in the repo. Nothing is drawn over the binder holes.
-        That is a rule, not a style.</p>
-        <div class="shots">
-          <img src="assets/architecture.png" alt="Hand drawn architecture sheet for Codeintel Os Command Injection Checker">
-          <img src="assets/flowchart.png" alt="Hand drawn flowchart sheet for Codeintel Os Command Injection Checker">
-          <img src="assets/product-map.png" alt="Hand drawn product map sheet for Codeintel Os Command Injection Checker">
-        </div>
-      </section>
-    </div>
-  </section>
+## Requirements
+
+- Python 3 (main.py uses only the standard library; `pip install -r requirements.txt` succeeds and installs nothing)
+- Optional external tools, installed separately, for the parts that invoke them: Bandit, Flake8, Pylint and Pyre, for example `pip install bandit flake8 pylint pyre-check`. Any of them can be skipped with its disable flag.
+
+## Install
+
+```
+git clone https://github.com/ShadowGuard-AI/codeintel-os-command-injection-checker.git
+cd codeintel-os-command-injection-checker
+```
+
+## Usage
+
+```
+python main.py &lt;filepath> [-o OUTPUT] [--disable-bandit] [--disable-flake8] [--disable-pylint] [--disable-pyre]
+python main.py --help
+```
+
+- `filepath` (required, positional): path to the Python file to analyze. The program exits with status 1 if the file does not exist.
+- `--output`, `-o`: combined results file. Default `output.txt`.
+- `--disable-bandit`: do not run Bandit.
+- `--disable-flake8`: do not run Flake8.
+- `--disable-pylint`: do not run Pylint.
+- `--disable-pyre`: do not run Pyre.
+
+There is no `--version` flag.
+
+## Examples
+
+```
+python main.py my_script.py
+python main.py my_script.py --disable-bandit
+python main.py my_script.py -o results.txt
+python main.py my_script.py --disable-bandit --disable-flake8 --disable-pylint --disable-pyre
+```
+
+Verified output on a sample file that passes `input()` to `os.system`: the program prints `Potential OS command injection vulnerability detected in bad.py`, and `results.txt` begins with that verdict under a `Command Injection Check:` heading, followed by Bandit, Flake8 and Pylint sections. A file with no matching pattern prints `No immediate OS command injection vulnerability detected in &lt;file>`.
+
+## Output and limitations
+
+- The combined output file contains the command injection verdict first, then whichever of `bandit_output.txt`, `flake8_output.txt` and `pylint_output.txt` were produced in the current directory during this run. Intermediate files from earlier runs are deleted at the start of each run so stale reports cannot leak into new results.
+- Pyre output is logged only and is not written into the combined file. Pyre needs a configured Pyre project for the directory containing the target file; without one it reports that in the log.
+- A tool that is not installed logs an error such as `Error running Bandit: [Errno 2] No such file or directory: 'bandit'` and the run continues. A missing tool by itself does not change the exit status: a clean built in verdict still exits with status 0. Bandit, Flake8 and Pylint findings do not change the exit status. The built in verdict does: a potential OS command injection vulnerability exits with status 1.
+- The built in check only recognises the call and input spellings listed above. Calls such as `os.popen(`, `subprocess.getoutput(` or `eval(` are not detected by it, although Bandit may report some of them.
+
+## License
+
+Copyright (c) ShadowStrikeHQ. No separate LICENSE file is included in this repository.
+
+## Diagrams and maps
+
+I drew the system out in [codeintel-os-command-injection-checker-Visuals](codeintel-os-command-injection-checker-Visuals/): an architecture diagram, a components diagram of the seven functions, a flowchart of one run, and a product map, with the written product map, statistics with citations, and the roadmap in [VISUAL.md](codeintel-os-command-injection-checker-Visuals/VISUAL.md). Every sheet also ships as a PNG photograph of the paper page beside its SVG.
+
+![OS Command Injection Checker architecture](codeintel-os-command-injection-checker-Visuals/architecture.svg)</pre></section>
 </main>
-<footer>
-  <p>Codeintel Os Command Injection Checker is one of my projects. This page was written
-  from the repo itself on 2026-10-30: the counts are the
-  repo's counts, the code is the repo's code, and the gaps are the
-  repo's gaps.</p>
-</footer>
+<footer>A cabinet of sheets, read drawer by drawer. Headings in Benne, body copy in Archivo.</footer>
 </body>
 </html>

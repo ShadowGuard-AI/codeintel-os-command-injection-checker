@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="620" viewBox="0 0 1600 620" role="img" aria-label="Cabinet top in three depths: lamp guttering far away, a folder tie drawn taut and press straps settling in the middle depth, pencil and hand lens under a passing cloud shadow near">
+<rect width="1600" height="620" fill="#6e6247"/>
+<g fill="#7d7150" stroke="#54492f" stroke-width="3">
+<rect x="30" y="30" width="290" height="180"/><rect x="350" y="30" width="290" height="180"/><rect x="670" y="30" width="290" height="180"/><rect x="990" y="30" width="290" height="180"/><rect x="1310" y="30" width="260" height="180"/></g>
+<g fill="#877a58"><rect x="48" y="52" width="254" height="40"/><rect x="48" y="104" width="254" height="40"/><rect x="48" y="156" width="254" height="40"/><rect x="368" y="52" width="254" height="40"/><rect x="368" y="104" width="254" height="40"/><rect x="368" y="156" width="254" height="40"/><rect x="688" y="52" width="254" height="40"/><rect x="688" y="104" width="254" height="40"/><rect x="688" y="156" width="254" height="40"/></g>
+<g><polygon points="1470,52 1512,52 1528,88 1454,88" fill="#e8b25c"/><line x1="1491" y1="88" x2="1491" y2="120" stroke="#3a352a" stroke-width="4"/>
+<ellipse cx="1491" cy="70" rx="60" ry="26" fill="none" stroke="#d4a454" stroke-width="2"><animate attributeName="opacity" values="0.9;0.25;0.9" dur="14s" begin="6s" repeatCount="indefinite"/></ellipse></g>
+<rect x="0" y="300" width="1600" height="320" fill="#948664"/>
+<rect x="120" y="330" width="760" height="240" fill="#78683f" stroke="#3a352a" stroke-width="3"/>
+<g fill="#b0a47c" stroke="#60543a" stroke-width="2"><rect x="150" y="356" width="150" height="180"/><rect x="316" y="356" width="150" height="180"/><rect x="482" y="356" width="150" height="180"/><rect x="648" y="356" width="150" height="180"/></g>
+<path d="M 250 380 q 60 26 130 6" stroke="#5c4c2c" stroke-width="5" fill="none"><animate attributeName="d" values="M 250 380 q 60 26 130 6;M 250 380 q 65 8 130 2;M 250 380 q 65 8 130 2" dur="12s" repeatCount="indefinite"/></path>
+<circle cx="382" cy="384" r="7" fill="#5c4c2c"><animate attributeName="opacity" values="0;0;1;1" dur="12s" repeatCount="indefinite"/></circle>
+<g><rect x="1010" y="330" width="330" height="30" fill="#7a5e36" stroke="#3a352a" stroke-width="3"/><rect x="1010" y="392" width="330" height="30" fill="#7a5e36" stroke="#3a352a" stroke-width="3"/>
+<g><animateTransform attributeName="transform" type="translate" values="0 0;0 6;0 6" dur="12s" repeatCount="indefinite"/><rect x="1060" y="306" width="10" height="120" fill="#564228"/><rect x="1280" y="306" width="10" height="120" fill="#564228"/></g></g>
+<path d="M 880 330 l 26 0 l -6 14 l -20 0 z" fill="#e8e0c8"><animate attributeName="d" values="M 880 330 l 26 0 l -6 14 l -20 0 z;M 880 330 l 26 -6 l -6 12 l -20 0 z;M 880 330 l 26 0 l -6 14 l -20 0 z" dur="12s" repeatCount="indefinite"/></path>
+<g><polygon points="180,560 268,548 284,556 198,570" fill="#c49634" stroke="#3a352a"/><ellipse cx="360" cy="548" rx="52" ry="52" fill="none" stroke="#605c54" stroke-width="9"/><line x1="398" y1="586" x2="452" y2="612" stroke="#605c54" stroke-width="10"/>
+<rect x="120" y="520" width="420" height="80" fill="#2c2820" opacity="0"><animate attributeName="opacity" values="0;0;0.28;0" dur="16s" repeatCount="indefinite"/><animate attributeName="x" values="60;60;900;900" dur="16s" repeatCount="indefinite"/></rect></g>
+</svg>
