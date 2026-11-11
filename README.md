@@ -1,12 +1,12 @@
-![Cabinets receding in field khaki shadow, one drawer open toward the viewer with folders inside and a pressed stem showing along the fold of the uppermost folder, a plant press with straps undone and a wavy stack of blotting sheets on the cabinet top, a short pencil and a hand lens beside a sheet not yet put away, and a warm lamp burning in the far corner, with no lettering anywhere](intro-banner.png)
+![Hand cupped to the brass mouth of a voice pipe close up, cap open, tubes and engine room dark behind, blank plates on the cream bulkhead](intro-banner.png)
 
 # codeintel-os-command-injection-checker
 
 Title block: the name above is set in Benne in pencil dark upon a field khaki plate ruled as a specimen label, with the single sheet mark below beside this first heading only. Headings after the first keep the label treatment without the image, each set like a specimen label, with the hand lens that belongs upon the cabinet top.
 
-![One upright herbarium sheet in field khaki margins, a pressed plant laid straight upon it with leaves spread and roots fanned at the foot, a blank ruled specimen label at the lower right, rust at one pin head only, and the name hand lettered below as a specimen label is lettered](logo.png)
+![One brass voice pipe mouth with its hinged cap open on a cream bulkhead plate, a blank brass plate beneath it, inside a dark ring](logo.png)
 
-![A cabinet room late in a quiet afternoon: one drawer drawn open with the sheet full width upon it and the pressed plant centred, the specimen label enlarged at its foot carrying the name, a wooden plant press with loosened straps, a wavy stack of blotting sheets, a short pencil and a hand lens on the cabinet top, and one warm lamp in the far corner](banner.png)
+![A bank of brass voice pipes on a cream bulkhead, an officer speaking into one, tubes running into the engine room dark, blank plates under every pipe](banner.png)
 
 ![The cabinet top in three depths: the warm lamp guttering once in the far depth, a folder tie drawn taut and knotted and the plant press straps settling by one notch in the middle depth, and a faint cloud shadow crossing the short pencil and the hand lens near](scene.svg)
 
